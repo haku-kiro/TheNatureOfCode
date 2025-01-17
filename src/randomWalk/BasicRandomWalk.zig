@@ -9,15 +9,12 @@ const Walker = struct {
     x: c_int,
     y: c_int,
     fn step(self: *Walker) void {
-        const dir = random.intRangeAtMost(u8, 0, 3);
+        // Walking in either of 8 possible directions;
+        const xdir = random.intRangeAtMost(i8, -1, 1);
+        const ydir = random.intRangeAtMost(i8, -1, 1);
 
-        switch (dir) {
-            0 => self.x += 1,
-            1 => self.x -= 1,
-            2 => self.y += 1,
-            3 => self.y -= 1,
-            else => unreachable,
-        }
+        self.x += xdir;
+        self.y += ydir;
     }
 };
 
@@ -27,7 +24,7 @@ pub fn main() !void {
     rl.InitWindow(screenWidth, screenHeight, "Random walk");
     defer rl.CloseWindow();
 
-    rl.SetTargetFPS(100);
+    rl.SetTargetFPS(30);
 
     // Setting the background color once (to have a "trail" effect);
     rl.ClearBackground(rl.WHITE);
