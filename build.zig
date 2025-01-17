@@ -58,7 +58,7 @@ pub fn build(b: *std.Build) !void {
         src: []const u8,
     }{
         // Add examples here as you make them;
-        .{ .name = "BasicRandomWalk", .src = "./src/randomWalk/BasicRandomWalk.zig" },
+        .{ .name = "RandomWalk", .src = "./src/00_randomness/RandomWalk.zig" },
     }) |execfg| {
         const ex_name = execfg.name;
         const ex_src = execfg.src;
