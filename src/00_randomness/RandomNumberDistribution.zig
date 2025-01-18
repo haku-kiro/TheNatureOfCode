@@ -29,9 +29,8 @@ pub fn main() !void {
         const w = screenWidth / randomCounts.len;
 
         for (randomCounts, 0..) |num, idx| {
-            const c_idx: c_int = @intCast(idx);
-            const x_pos = c_idx * @as(c_int, w);
-            const y_pos = screenHeight - @as(u16, randomCounts[idx]);
+            const x_pos: c_int = @intCast(idx * w);
+            const y_pos: c_int = @intCast(screenHeight - randomCounts[idx]);
             rl.DrawRectangle(x_pos, y_pos, w - 1, num, rl.WHITE);
         }
     }
