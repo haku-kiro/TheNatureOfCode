@@ -15,7 +15,7 @@ pub fn main() !void {
     rl.InitWindow(screenWidth, screenHeight, "Random Number distribution");
     defer rl.CloseWindow();
 
-    rl.SetTargetFPS(60);
+    rl.SetTargetFPS(80);
 
     while (!rl.WindowShouldClose()) {
         rl.BeginDrawing();
@@ -24,7 +24,7 @@ pub fn main() !void {
         rl.ClearBackground(rl.BLACK);
 
         const index = random.intRangeAtMost(u8, 0, total - 1);
-        randomCounts[index] += 1;
+        if (randomCounts[index] < screenHeight) randomCounts[index] += 1;
 
         const w = screenWidth / randomCounts.len;
 
