@@ -9,7 +9,8 @@ const Walker = struct {
     x: c_int,
     y: c_int,
     fn step(self: *Walker) void {
-        // Walking in either of 8 possible directions;
+        // Walking in either of 8 possible directions,
+        // or stay in the same position;
         const xdir = random.intRangeAtMost(i8, -1, 1);
         const ydir = random.intRangeAtMost(i8, -1, 1);
 

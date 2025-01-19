@@ -12,7 +12,7 @@ pub fn main() !void {
     const total = 20;
     var randomCounts = [_]u16{0} ** total;
 
-    rl.InitWindow(screenWidth, screenHeight, "Random Number distribution");
+    rl.InitWindow(screenWidth, screenHeight, "Uniform Random Number distribution");
     defer rl.CloseWindow();
 
     rl.SetTargetFPS(80);
