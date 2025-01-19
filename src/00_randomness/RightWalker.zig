@@ -11,14 +11,14 @@ const Walker = struct {
     fn step(self: *Walker) void {
         // Walking in either of 8 possible directions,
         // or stay in the same position;
-        const dir = random.intRangeAtMost(u8, 0, 9);
+        const dir = random.intRangeAtMost(u8, 1, 10);
 
         switch (dir) {
             // More likely to go right.
-            0...3 => self.x += 1,
-            4...5 => self.x -= 1,
-            6...7 => self.y += 1,
-            8...9 => self.y -= 1,
+            1...4 => self.x += 1,
+            5, 6 => self.x -= 1,
+            7, 8 => self.y += 1,
+            9, 10 => self.y -= 1,
             else => unreachable,
         }
     }
