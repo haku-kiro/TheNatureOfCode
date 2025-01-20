@@ -12,7 +12,7 @@ pub fn main() !void {
     const total = 20;
     var randomCounts = [_]u16{0} ** total;
 
-    rl.InitWindow(screenWidth, screenHeight, "Uniform Random Number distribution");
+    rl.InitWindow(screenWidth, screenHeight, "Normal distribution random number generation");
     defer rl.CloseWindow();
 
     rl.SetTargetFPS(80);
@@ -23,7 +23,7 @@ pub fn main() !void {
 
         rl.ClearBackground(rl.BLACK);
 
-        const index = random.intRangeAtMost(u8, 0, total - 1);
+        const index = normalDistributionIntsBetween(random, 1, total - 1);
         if (randomCounts[index] < screenHeight) randomCounts[index] += 1;
 
         const w = screenWidth / randomCounts.len;
@@ -34,4 +34,20 @@ pub fn main() !void {
             rl.DrawRectangle(x_pos, y_pos, w - 1, num, rl.WHITE);
         }
     }
+}
+
+fn normalDistributionIntsBetween(r: std.Random, low: u8, high: u8) u8 {
+    const f_high: f32 = @floatFromInt(high);
+    const f_low: f32 = @floatFromInt(low);
+    // Just "hardcoding" the midpoint as the average.
+    const avg: f32 = f_high / 2.0;
+    const stdDeviation: f32 = 2.5;
+
+    var num = random.floatNorm(f32) * stdDeviation + avg;
+    // We're doing this to "anchor" our value between the lower and upper bound.
+    while (num > f_high or num < f_low) {
+        num = r.floatNorm(f32) * stdDeviation + avg;
+    }
+
+    return @intFromFloat(num);
 }
