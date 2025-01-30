@@ -4,7 +4,7 @@ const rl = @cImport({
     @cInclude("raylib.h");
     @cInclude("raymath.h");
 
-    // @cInclude("raygui.h");
+    @cInclude("raygui.h");
 });
 
 // You can write any custom bindings/helper functions here.
