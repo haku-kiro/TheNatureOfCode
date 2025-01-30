@@ -12,7 +12,7 @@ pub fn main() !void {
     const total = 20;
     var randomCounts = [_]u16{0} ** total;
 
-    rl.InitWindow(screenWidth, screenHeight, "Uniform Random Number distribution");
+    rl.InitWindow(screenWidth, screenHeight, "Accept/Reject Random Number distribution");
     defer rl.CloseWindow();
 
     rl.SetTargetFPS(80);
@@ -38,13 +38,15 @@ pub fn main() !void {
 
 // Favours higher numbers, meaning your distribution would tend to the upper limit;
 // Known as a monte carlo method;
-fn acceptReject(low: u8, high: u8) u8 {
+fn acceptReject(low: u16, high: u16) u8 {
     while (true) {
-        const r1 = random.intRangeAtMost(u8, low, high);
-        const r2 = random.intRangeAtMost(u8, low, high);
+        const r1 = random.intRangeAtMost(u16, low, high);
+        // Probability maps to y = x^2
+        const probability = r1 * r1;
+        const r2 = random.intRangeAtMost(u16, low, high);
 
-        if (r2 < r1) {
-            return r1;
+        if (r2 < probability) {
+            return @intCast(r1);
         }
     }
 }
