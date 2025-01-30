@@ -7,6 +7,7 @@
 
 const std = @import("std");
 const rl = @import("raylib");
+const perlin = @import("perlin");
 
 // Random number setup;
 var prng = std.Random.DefaultPrng.init(42);
@@ -32,7 +33,7 @@ const Walker = struct {
 pub fn main() !void {
     const screenWidth = 800;
     const screenHeight = 450;
-    rl.InitWindow(screenWidth, screenHeight, "Random Walk");
+    rl.InitWindow(screenWidth, screenHeight, "Random Walk, random steps");
     defer rl.CloseWindow();
 
     rl.SetTargetFPS(30);

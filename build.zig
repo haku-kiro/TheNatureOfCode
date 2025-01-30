@@ -6,7 +6,6 @@ pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
 
     // Add raylib library and link with your executable. This is the only raylib boilerplate.
-    // Everything else in this file is standard Zig build system setup.
     const raylib = try raylibBuild.addRaylib(b, target, optimize, .{
         // Optional - build & link raygui.
         .raygui = true,
@@ -19,6 +18,12 @@ pub fn build(b: *std.Build) !void {
     });
     raylib_module.linkLibrary(raylib);
 
+    const perlin_noise_module = b.addModule("perlin", .{
+        .root_source_file = b.path("src/helpers/perlin_noise.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
     const exe = b.addExecutable(.{
         .name = "TheNatureOfCode",
         .root_source_file = b.path("src/main.zig"),
@@ -27,6 +32,7 @@ pub fn build(b: *std.Build) !void {
     });
 
     exe.root_module.addImport("raylib", raylib_module);
+    exe.root_module.addImport("perlin", perlin_noise_module);
 
     b.installArtifact(exe);
 
@@ -100,8 +106,9 @@ pub fn build(b: *std.Build) !void {
         // Not sure about this for import raylib here, maybe?
         // example.root_module.addImport("module name", moduleName);
 
-        // Adding raylib to each example;
+        // Imports that are being added to each example,
         example.root_module.addImport("raylib", raylib_module);
+        example.root_module.addImport("perlin", perlin_noise_module);
 
         const example_run = b.addRunArtifact(example);
         example_run_step.dependOn(&example_run.step);
