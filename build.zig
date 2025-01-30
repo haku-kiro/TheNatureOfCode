@@ -63,6 +63,7 @@ pub fn build(b: *std.Build) !void {
         .{ .name = "RightWalker", .src = "./src/00_randomness/RightWalker.zig" },
         .{ .name = "NormalDistribution", .src = "./src/00_randomness/NormalDistribution.zig" },
         .{ .name = "AcceptRejectDistribution", .src = "./src/00_randomness/AcceptRejectDistribution.zig" },
+        .{ .name = "WalkerRandomSteps", .src = "./src/00_randomness/WalkerRandomSteps.zig" },
     }) |execfg| {
         const ex_name = execfg.name;
         const ex_src = execfg.src;
