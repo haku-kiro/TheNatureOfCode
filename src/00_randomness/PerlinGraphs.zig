@@ -2,6 +2,10 @@ const std = @import("std");
 const rl = @import("raylib");
 const perlin = @import("perlin");
 
+// Random number setup;
+var prng = std.Random.DefaultPrng.init(42);
+const random = prng.random();
+
 pub fn main() !void {
     const screenWidth = 800;
     const screenHeight = 450;
@@ -23,12 +27,18 @@ pub fn main() !void {
         var xoff = time;
         for (0..screenWidth) |i| {
             const x_pos: c_int = @intCast(i);
+            // Random noise line (uniform distribution)
+            // Comment this out if you're not into seeing crazy lines;
+            const y_random = random.intRangeAtMost(c_int, 0, screenHeight);
+            const y_random_next = random.intRangeAtMost(c_int, 0, screenHeight);
+            rl.DrawLine(x_pos, y_random, x_pos + 1, y_random_next, rl.BLACK);
+
+            // Perlin noise line
             const y_pos = generateNextYPerlin(xoff, octaves, screenHeight);
             const y_next_pos = generateNextYPerlin(xoff + frequency, octaves, screenHeight);
             xoff += frequency;
 
-            // Drawing a line between points
-            rl.DrawLine(x_pos, y_pos, x_pos + 1, y_next_pos, rl.BLACK);
+            rl.DrawLine(x_pos, y_pos, x_pos + 1, y_next_pos, rl.RED);
         }
         time += frequency;
     }
