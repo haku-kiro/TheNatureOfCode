@@ -10,39 +10,44 @@ pub fn interpolate(a: f32, b: f32, t: f32) f32 {
 
 // Returns a single random point, for 1D Perlin Noise
 pub fn getRandom(x: f32) f32 {
-    const x_int: usize = @intCast(x);
-    const w: usize = 8 * std.math.maxInt(usize);
-    const s: usize = w / 2; // rotation width
-    var a = x_int;
-    a *= 3284157443;
-    a ^= a << s | a >> (w - s);
-    a *= 1911520717;
-    a ^= a << s | a >> (w - s);
-    a *= 204819325;
+    const w = 8 * @sizeOf(u32);
+    const s = w / 2;
+    var a: u32 = @intFromFloat(x);
 
-    return @as(f32, @floatFromInt(a)) / @as(f32, @floatFromInt(~@as(u32, 0))) - 0.5;
+    // For wrapping arithmitic, you need to be explicit in zig;
+    a *%= 3284157443;
+    // Using truncate because zig requires explicit truncation for shift counts,
+    // as 's' is calculated at runtime
+    a ^= (a << @truncate(s)) | (a >> @truncate(w - s));
+    a *%= 1911520717;
+    a ^= (a << @truncate(s)) | (a >> @truncate(w - s));
+    a *%= 2048419325;
+
+    const max_u32 = @as(f32, @floatFromInt(~@as(u32, 0)));
+    return @as(f32, @floatFromInt(a)) / max_u32 - 0.5;
 }
 
 pub fn map(value: f32, fromLow: f32, fromHigh: f32, toLow: f32, toHigh: f32) f32 {
-    value = @min(@max(value, fromLow), fromHigh);
+    const v = @min(@max(value, fromLow), fromHigh);
     // Map a value to the target range
-    return toLow + (toHigh - toLow) * ((value - fromLow) / (fromHigh - fromLow));
+    return toLow + (toHigh - toLow) * ((v - fromLow) / (fromHigh - fromLow));
 }
 
 pub fn perlinNoise(x: f32, octaves: usize) f32 {
     var frequency: f32 = 1.0;
     var amplitude: f32 = 1.0;
     var total: f32 = 0;
+    var x_modifier = x;
 
     for (0..octaves) |_| {
-        x *= frequency;
-        const x0: f32 = std.math.floor(x);
+        x_modifier *= frequency;
+        const x0: f32 = std.math.floor(x_modifier);
         const x1: f32 = x0 + 1.0;
 
         const gX0 = map(getRandom(x0), -0.5, 0.5, -amplitude / 2, amplitude / 2);
         const gX1 = map(getRandom(x1), -0.5, 0.5, -amplitude / 2, amplitude / 2);
 
-        const t = x - x0;
+        const t = x_modifier - x0;
 
         total += interpolate(gX0, gX1, t);
 
@@ -58,7 +63,7 @@ const vector2 = struct { x: f32, y: f32 };
 pub fn getRandom2d(x: f32, y: f32) vector2 {
     const x_int: usize = @intCast(x);
     const y_int: usize = @intCast(y);
-    const w: usize = 8 * std.math.maxInt(usize);
+    const w: usize = 8 * @sizeOf(u32);
     const s: usize = w / 2; // rotation width
     var a = x_int;
     var b = y_int;
