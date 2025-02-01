@@ -1,6 +1,7 @@
 const std = @import("std");
 const rl = @import("raylib");
 const perlin = @import("perlin");
+const perlinnnnn = @import("p");
 
 // Random number setup;
 var prng = std.Random.DefaultPrng.init(42);
@@ -15,8 +16,15 @@ pub fn main() !void {
     rl.SetTargetFPS(60);
 
     var time: f32 = 0.0;
-    const octaves = 2;
+    const octaves = 7;
     const frequency: f32 = 0.01;
+
+    // Testing new perlin noise implementation
+    const n = perlinnnnn.Perlin{};
+    for (0..100) |i| {
+        const result_noise = n.perlin(@as(f32, @floatFromInt(i)), 1, 1);
+        std.debug.print("New noise value: {d}\n", .{result_noise});
+    }
 
     while (!rl.WindowShouldClose()) {
         rl.BeginDrawing();
