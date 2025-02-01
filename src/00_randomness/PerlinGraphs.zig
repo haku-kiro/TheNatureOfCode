@@ -28,10 +28,11 @@ pub fn main() !void {
         for (0..screenWidth) |i| {
             const x_pos: c_int = @intCast(i);
             // Random noise line (uniform distribution)
-            // Comment this out if you're not into seeing crazy lines;
-            const y_random = random.intRangeAtMost(c_int, 0, screenHeight);
-            const y_random_next = random.intRangeAtMost(c_int, 0, screenHeight);
-            rl.DrawLine(x_pos, y_random, x_pos + 1, y_random_next, rl.BLACK);
+            // Leaving commented out by default, if you want to plot uniform noise on a graph
+            // uncomment the following:
+            // const y_random = random.intRangeAtMost(c_int, 0, screenHeight);
+            // const y_random_next = random.intRangeAtMost(c_int, 0, screenHeight);
+            // rl.DrawLine(x_pos, y_random, x_pos + 1, y_random_next, rl.BLACK);
 
             // Perlin noise line
             const y_pos = generateNextYPerlin(xoff, octaves, screenHeight);
