@@ -12,9 +12,9 @@ const Walker = struct {
     ty: f64 = 10000,
 
     fn step(self: *Walker, width: f64, height: f64) void {
-        const x_pos = p.noise(self.tx, 0, 0);
-        const y_pos = p.noise(self.ty, 0, 0);
+        const x_pos = p.noise(self.tx, self.ty, 0);
         self.tx += frequency;
+        const y_pos = p.noise(self.tx, self.ty, 0);
         self.ty += frequency;
 
         const mapped_x = perlin.map(x_pos, 0, 1, 0, width);
@@ -36,7 +36,7 @@ pub fn main() !void {
     // setup,
     var walker = Walker{ .x = screenWidth / 2, .y = screenHeight / 2 };
     // Setting the background color once (to have a "trail" effect);
-    // rl.ClearBackground(rl.BLACK);
+    rl.ClearBackground(rl.BLACK);
 
     while (!rl.WindowShouldClose()) {
         rl.BeginDrawing();
