@@ -12,9 +12,9 @@ const Walker = struct {
     ty: f64 = 10000,
 
     fn step(self: *Walker, width: f64, height: f64) void {
-        const x_pos = p.noise(self.tx, self.ty, 0);
+        const x_pos = p.noise(self.tx, 0, 0);
+        const y_pos = p.noise(self.ty, 0, 0);
         self.tx += frequency;
-        const y_pos = p.noise(self.tx, self.ty, 0);
         self.ty += frequency;
 
         const mapped_x = perlin.map(x_pos, 0, 1, 0, width);
@@ -31,18 +31,20 @@ pub fn main() !void {
     rl.InitWindow(screenWidth, screenHeight, "Random walk");
     defer rl.CloseWindow();
 
-    rl.SetTargetFPS(10);
+    rl.SetTargetFPS(60);
 
     // setup,
     var walker = Walker{ .x = screenWidth / 2, .y = screenHeight / 2 };
     // Setting the background color once (to have a "trail" effect);
-    rl.ClearBackground(rl.BLACK);
+    // Note, on linux, this is fine - but mac/windows has a flashing effect
+    // because of the double buffer rendering - change to black, then
+    rl.ClearBackground(rl.WHITE);
 
     while (!rl.WindowShouldClose()) {
         rl.BeginDrawing();
         defer rl.EndDrawing();
 
-        rl.DrawPixel(walker.x, walker.y, rl.WHITE);
+        rl.DrawCircle(walker.x, walker.y, 3, rl.PINK);
         walker.step(screenWidth, screenHeight);
     }
 }
