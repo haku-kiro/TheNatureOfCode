@@ -1,7 +1,7 @@
 const std = @import("std");
 
 // maps values from a specified low-high to low-high
-pub fn map(value: f32, fromLow: f32, fromHigh: f32, toLow: f32, toHigh: f32) f32 {
+pub fn map(value: f64, fromLow: f64, fromHigh: f64, toLow: f64, toHigh: f64) f64 {
     const v = @min(@max(value, fromLow), fromHigh);
     // Map a value to the target range
     return toLow + (toHigh - toLow) * ((v - fromLow) / (fromHigh - fromLow));

@@ -71,6 +71,7 @@ pub fn build(b: *std.Build) !void {
         .{ .name = "AcceptRejectDistribution", .src = "./src/00_randomness/AcceptRejectDistribution.zig" },
         .{ .name = "WalkerRandomSteps", .src = "./src/00_randomness/WalkerRandomSteps.zig" },
         .{ .name = "PerlinGraphs", .src = "./src/00_randomness/PerlinGraphs.zig" },
+        .{ .name = "PerlinWalker", .src = "./src/00_randomness/PerlinWalker.zig" },
     }) |execfg| {
         const ex_name = execfg.name;
         const ex_src = execfg.src;
