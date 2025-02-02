@@ -38,10 +38,11 @@ pub fn main() !void {
 
             // Perlin noise line
             const y_pos = generateNextYPerlin(n, xoff, screenHeight, octaves);
-            const y_next_pos = generateNextYPerlin(n, xoff + frequency, screenHeight, octaves);
+            // const y_next_pos = generateNextYPerlin(n, xoff + frequency, screenHeight, octaves);
             xoff += frequency;
 
-            rl.DrawLine(x_pos, y_pos, x_pos + 1, y_next_pos, rl.RED);
+            // rl.DrawLine(x_pos, y_pos, x_pos + 1, y_next_pos, rl.RED);
+            rl.DrawCircle(x_pos, y_pos, 10, rl.RED);
         }
         time += frequency;
     }
