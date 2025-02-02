@@ -3,8 +3,8 @@ const rl = @import("raylib");
 const perlin = @import("perlin");
 
 const p = perlin.Perlin{};
-const frequency = 0.01;
-const octaves = 8;
+const frequency = 0.05;
+const octaves = 6;
 const persistence = 0.7;
 
 pub fn main() !void {
@@ -27,16 +27,20 @@ pub fn main() !void {
             for (0..screenHeight) |y| {
                 const noise = p.OctavePerlin(xoff, yoff, 0, octaves, persistence);
 
-                // TODO: Map colours or something here, instead of either black or white;
+                const color = ColorFromNoise(noise);
+                const x_c: c_int = @intCast(x);
+                const y_c: c_int = @intCast(y);
+                rl.DrawPixel(x_c, y_c, color);
 
-                if (noise > 0.5) {
-                    const x_c: c_int = @intCast(x);
-                    const y_c: c_int = @intCast(y);
-                    rl.DrawPixel(x_c, y_c, rl.BLACK);
-                }
                 yoff += frequency;
             }
             xoff += frequency;
         }
     }
+}
+
+pub fn ColorFromNoise(noise: f64) rl.Color {
+    const alpha_noise = @floor(perlin.map(noise, 0, 1, 0, 255));
+    const mapped_alpha: u8 = @intFromFloat(alpha_noise);
+    return rl.Color{ .r = 0, .g = 0, .b = 0, .a = mapped_alpha };
 }
