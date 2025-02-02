@@ -22,7 +22,8 @@ pub fn main() !void {
     // Testing new perlin noise implementation
     const n = perlinnnnn.Perlin{};
     for (0..100) |i| {
-        const result_noise = n.perlin(@as(f32, @floatFromInt(i)), 1, 1);
+        const fi: f32 = @floatFromInt(i);
+        const result_noise = n.perlin(fi * 0.5, 0.5, 0.5);
         std.debug.print("New noise value: {d}\n", .{result_noise});
     }
 
