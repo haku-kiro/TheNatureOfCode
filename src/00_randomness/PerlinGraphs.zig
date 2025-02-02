@@ -1,7 +1,6 @@
 const std = @import("std");
 const rl = @import("raylib");
 const perlin = @import("perlin");
-const perlinnnnn = @import("p");
 
 // Random number setup;
 var prng = std.Random.DefaultPrng.init(42);
@@ -16,16 +15,10 @@ pub fn main() !void {
     rl.SetTargetFPS(60);
 
     var time: f32 = 0.0;
-    const octaves = 7;
+    const octaves = 1;
     const frequency: f32 = 0.01;
 
-    // Testing new perlin noise implementation
-    const n = perlinnnnn.Perlin{};
-    for (0..100) |i| {
-        const fi: f32 = @floatFromInt(i);
-        const result_noise = n.perlin(fi * 0.5, 0.5, 0.5);
-        std.debug.print("New noise value: {d}\n", .{result_noise});
-    }
+    const n = perlin.Perlin{};
 
     while (!rl.WindowShouldClose()) {
         rl.BeginDrawing();
@@ -44,8 +37,8 @@ pub fn main() !void {
             // rl.DrawLine(x_pos, y_random, x_pos + 1, y_random_next, rl.BLACK);
 
             // Perlin noise line
-            const y_pos = generateNextYPerlin(xoff, octaves, screenHeight);
-            const y_next_pos = generateNextYPerlin(xoff + frequency, octaves, screenHeight);
+            const y_pos = generateNextYPerlin(n, xoff, screenHeight, octaves);
+            const y_next_pos = generateNextYPerlin(n, xoff + frequency, screenHeight, octaves);
             xoff += frequency;
 
             rl.DrawLine(x_pos, y_pos, x_pos + 1, y_next_pos, rl.RED);
@@ -56,13 +49,11 @@ pub fn main() !void {
 
 // Gets a perlin noise value, maps it between 0 and 1 and then applies it
 // to the screen height
-fn generateNextYPerlin(x: f32, octaves: usize, screenHeight: usize) c_int {
+fn generateNextYPerlin(gen: perlin.Perlin, x: f32, screenHeight: usize, octaves: usize) c_int {
     // 1D perlin noise
-    const noise = perlin.perlinNoise(x, octaves);
+    const noise = gen.OctavePerlin(x, x, x, octaves, 0.5);
 
-    // Mapping the values between 0 and 1 before multiplying by window hight;
-    const y = perlin.map(noise, -1.0, 1.0, 0.0, 1.0);
     const screen_float: f32 = @floatFromInt(screenHeight);
-    const y_pos: c_int = @intFromFloat(y * screen_float);
+    const y_pos: c_int = @intFromFloat(noise * screen_float);
     return y_pos;
 }

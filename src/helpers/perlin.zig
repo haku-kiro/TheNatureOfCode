@@ -1,5 +1,12 @@
 const std = @import("std");
 
+// maps values from a specified low-high to low-high
+pub fn map(value: f32, fromLow: f32, fromHigh: f32, toLow: f32, toHigh: f32) f32 {
+    const v = @min(@max(value, fromLow), fromHigh);
+    // Map a value to the target range
+    return toLow + (toHigh - toLow) * ((v - fromLow) / (fromHigh - fromLow));
+}
+
 pub const Perlin = struct {
     repeat: usize = 0,
 
@@ -57,7 +64,7 @@ pub const Perlin = struct {
         return (if ((h & 1) == 0) u else -u) + (if ((h & 2) == 0) v else -v);
     }
 
-    pub fn perlin(self: Perlin, x_pos: f64, y_pos: f64, z_pos: f64) f64 {
+    pub fn noise(self: Perlin, x_pos: f64, y_pos: f64, z_pos: f64) f64 {
         var x = x_pos;
         var y = y_pos;
         var z = z_pos;
@@ -106,14 +113,14 @@ pub const Perlin = struct {
         return (lerp(y1, y2, w) + 1) / 2;
     }
 
-    pub fn OctavePerlin(self: Perlin, x: f64, y: f64, z: f64, octaves: u32, persistence: f64) f64 {
+    pub fn OctavePerlin(self: Perlin, x: f64, y: f64, z: f64, octaves: usize, persistence: f64) f64 {
         var total: f64 = 0;
         var frequency: f64 = 1;
         var amplitude: f64 = 1;
         var maxValue: f64 = 0;
 
         for (0..octaves) |_| {
-            total += self.perlin(x * frequency, y * frequency, z * frequency) * amplitude;
+            total += self.noise(x * frequency, y * frequency, z * frequency) * amplitude;
             maxValue += amplitude;
             amplitude *= persistence;
             frequency *= 2;

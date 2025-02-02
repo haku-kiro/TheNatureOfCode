@@ -19,12 +19,6 @@ pub fn build(b: *std.Build) !void {
     raylib_module.linkLibrary(raylib);
 
     const perlin_noise_module = b.addModule("perlin", .{
-        .root_source_file = b.path("src/helpers/perlin_noise.zig"),
-        .target = target,
-        .optimize = optimize,
-    });
-
-    const perlin_module = b.addModule("p", .{
         .root_source_file = b.path("src/helpers/perlin.zig"),
         .target = target,
         .optimize = optimize,
@@ -39,7 +33,6 @@ pub fn build(b: *std.Build) !void {
 
     exe.root_module.addImport("raylib", raylib_module);
     exe.root_module.addImport("perlin", perlin_noise_module);
-    exe.root_module.addImport("p", perlin_module);
 
     b.installArtifact(exe);
 
@@ -117,7 +110,6 @@ pub fn build(b: *std.Build) !void {
         // Imports that are being added to each example,
         example.root_module.addImport("raylib", raylib_module);
         example.root_module.addImport("perlin", perlin_noise_module);
-        example.root_module.addImport("p", perlin_module);
 
         const example_run = b.addRunArtifact(example);
         example_run_step.dependOn(&example_run.step);
