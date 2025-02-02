@@ -102,17 +102,8 @@ pub const Perlin = struct {
         const x2_2 = lerp(grad(abb, xf, yf - 1, zf - 1), grad(bbb, xf - 1, yf - 1, zf - 1), u);
         const y2 = lerp(x1_2, x2_2, v);
 
-        // std.debug.print("Value after iteration,\ny1: {d}\ny2: {d}\nw: {d}\n", .{ y1, y2, w });
-
         // Result is bound to 0 - 1, previous possible values where -1 - 1;
-        const result = (lerp(y1, y2, w) + 1) / 2;
-        // Debug prints
-        std.debug.print("xi: {}, yi: {}, zi: {}\n", .{ xi, yi, zi });
-        std.debug.print("xf: {d:.3}, yf: {d:.3}, zf: {d:.3}\n", .{ xf, yf, zf });
-        std.debug.print("u: {d:.3}, v: {d:.3}, w: {d:.3}\n", .{ u, v, w });
-        std.debug.print("result: {d:.3}\n", .{result});
-
-        return result;
+        return (lerp(y1, y2, w) + 1) / 2;
     }
 
     pub fn OctavePerlin(self: Perlin, x: f64, y: f64, z: f64, octaves: u32, persistence: f64) f64 {
