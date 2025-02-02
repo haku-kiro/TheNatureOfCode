@@ -4,6 +4,7 @@ const perlin = @import("perlin");
 
 const p = perlin.Perlin{};
 const frequency = 0.01;
+const octaves = 8;
 
 const Walker = struct {
     x: c_int,
@@ -12,8 +13,8 @@ const Walker = struct {
     ty: f64 = 10000,
 
     fn step(self: *Walker, width: f64, height: f64) void {
-        const x_pos = p.noise(self.tx, 0, 0);
-        const y_pos = p.noise(self.ty, 0, 0);
+        const x_pos = p.OctavePerlin(self.tx, 0, 0, octaves, 0.5);
+        const y_pos = p.OctavePerlin(self.ty, 0, 0, octaves, 0.5);
         self.tx += frequency;
         self.ty += frequency;
 
