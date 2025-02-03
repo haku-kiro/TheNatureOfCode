@@ -13,7 +13,8 @@ pub fn main() !void {
     rl.InitWindow(screenWidth, screenHeight, "2D perlin noise");
     defer rl.CloseWindow();
 
-    rl.SetTargetFPS(30);
+    // TODO: instead of a really low framerate - render a texture once, and load that.
+    rl.SetTargetFPS(1);
 
     while (!rl.WindowShouldClose()) {
         rl.BeginDrawing();
