@@ -73,6 +73,7 @@ pub fn build(b: *std.Build) !void {
         .{ .name = "PerlinGraphs", .src = "./src/00_randomness/PerlinGraphs.zig" },
         .{ .name = "PerlinWalker", .src = "./src/00_randomness/PerlinWalker.zig" },
         .{ .name = "TwoDPerlinNoise", .src = "./src/00_randomness/TwoDPerlinNoise.zig" },
+        .{ .name = "ThreeDPerlin", .src = "./src/00_randomness/ThreeDPerlin.zig" },
     }) |execfg| {
         const ex_name = execfg.name;
         const ex_src = execfg.src;
