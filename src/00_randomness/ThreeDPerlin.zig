@@ -4,7 +4,7 @@ const perlin = @import("perlin");
 
 const p = perlin.Perlin{};
 const frequency = 0.05;
-const octaves = 8;
+const octaves = 1;
 const persistence = 0.7;
 
 const width = 100;
@@ -18,7 +18,7 @@ fn generateHeightmap() [width][height]f64 {
         for (0..height) |y| {
             const nx = @as(f64, @floatFromInt(x)) * scale;
             const ny = @as(f64, @floatFromInt(y)) * scale;
-            heightmap[x][y] = p.OctavePerlin(nx, ny, 0.0, octaves, persistence) * 50;
+            heightmap[x][y] = p.OctavePerlin(nx, ny, 0.0, octaves, persistence) * 30;
         }
     }
 
@@ -127,7 +127,7 @@ pub fn main() !void {
     camera.fovy = 45;
     camera.projection = rl.CAMERA_PERSPECTIVE;
 
-    rl.SetTargetFPS(60);
+    rl.SetTargetFPS(30);
 
     const heightMap = generateHeightmap();
     const terrainMesh = try createTerrainMesh(allocator, heightMap);
@@ -150,6 +150,6 @@ pub fn main() !void {
         rl.DrawFPS(10, 10);
     }
 
-    rl.UnloadModel(terrainModel);
-    rl.UnloadMesh(terrainMesh);
+    // rl.UnloadModel(terrainModel);
+    // rl.UnloadMesh(terrainMesh);
 }
