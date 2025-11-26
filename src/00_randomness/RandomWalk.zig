@@ -22,22 +22,25 @@ const Walker = struct {
 pub fn main() !void {
     const screenWidth = 800;
     const screenHeight = 450;
-    rl.InitWindow(screenWidth, screenHeight, "Random walk");
-    defer rl.CloseWindow();
+    rl.initWindow(screenWidth, screenHeight, "Random walk");
+    defer rl.closeWindow();
 
-    rl.SetTargetFPS(30);
+    rl.setTargetFPS(30);
 
     // Setting the background color once (to have a "trail" effect);
-    rl.ClearBackground(rl.WHITE);
+    rl.clearBackground(rl.Color.white);
 
     // setup,
     var walker = Walker{ .x = screenWidth / 2, .y = screenHeight / 2 };
 
-    while (!rl.WindowShouldClose()) {
-        rl.BeginDrawing();
-        defer rl.EndDrawing();
+    while (!rl.windowShouldClose()) {
+        rl.beginDrawing();
+        defer rl.endDrawing();
 
-        rl.DrawPixel(walker.x, walker.y, rl.BLACK);
+        // Prevent flashing by having this... But you don't have "trail" effect
+        rl.clearBackground(rl.Color.white);
+
+        rl.drawPixel(walker.x, walker.y, rl.Color.black);
         walker.step();
     }
 }
