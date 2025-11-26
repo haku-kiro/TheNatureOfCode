@@ -1,6 +1,7 @@
 const std = @import("std");
-const rl = @import("raylib");
+
 const perlin = @import("perlin");
+const rl = @import("raylib");
 
 const p = perlin.Perlin{};
 const frequency = 0.05;
@@ -65,46 +66,57 @@ fn createTerrainMesh(allocator: std.mem.Allocator, heightmap: [width][height]f64
         .indices = @ptrCast(indices.ptr),
         .normals = null,
         .texcoords = null,
+        .texcoords2 = null,
+        .tangents = null,
+        .colors = null,
+        .animVertices = null,
+        .animNormals = null,
+        .boneIds = null,
+        .boneWeights = null,
+        .boneMatrices = null,
+        .boneCount = 0,
+        .vaoId = 0,
+        .vboId = 0,
     };
 
-    rl.UploadMesh(&mesh, false);
+    rl.uploadMesh(&mesh, false);
     return mesh;
 }
 
 fn drawTerrainGrid(heightmap: [width][height]f64) void {
-    const lineColor = rl.BLACK;
+    const lineColor = rl.Color.black;
 
     // Draw horizontal lines
     for (0..width) |x| {
         for (0..height - 1) |y| {
-            const start = .{
+            const start: rl.Vector3 = .{
                 .x = @as(f32, @floatFromInt(x)),
                 .y = @as(f32, @floatCast(heightmap[x][y])),
                 .z = @as(f32, @floatFromInt(y)),
             };
-            const end = .{
+            const end: rl.Vector3 = .{
                 .x = @as(f32, @floatFromInt(x)),
                 .y = @as(f32, @floatCast(heightmap[x][y + 1])),
                 .z = @as(f32, @floatFromInt(y + 1)),
             };
-            rl.DrawLine3D(start, end, lineColor);
+            rl.drawLine3D(start, end, lineColor);
         }
     }
 
     // Draw vertical lines
     for (0..height) |y| {
         for (0..width - 1) |x| {
-            const start = .{
+            const start: rl.Vector3 = .{
                 .x = @as(f32, @floatFromInt(x)),
                 .y = @as(f32, @floatCast(heightmap[x][y])),
                 .z = @as(f32, @floatFromInt(y)),
             };
-            const end = .{
+            const end: rl.Vector3 = .{
                 .x = @as(f32, @floatFromInt(x + 1)),
                 .y = @as(f32, @floatCast(heightmap[x + 1][y])),
                 .z = @as(f32, @floatFromInt(y)),
             };
-            rl.DrawLine3D(start, end, lineColor);
+            rl.drawLine3D(start, end, lineColor);
         }
     }
 }
@@ -116,38 +128,39 @@ pub fn main() !void {
 
     const screenWidth = 800;
     const screenHeight = 600;
-    rl.InitWindow(screenWidth, screenHeight, "3D perlin noise");
-    defer rl.CloseWindow();
+    rl.initWindow(screenWidth, screenHeight, "3D perlin noise");
+    defer rl.closeWindow();
 
     // Set up camera,
-    var camera: rl.Camera3D = .{};
-    camera.position = rl.Vector3{ .x = 100, .y = 100, .z = 100 };
-    camera.target = rl.Vector3{ .x = width / 2, .y = 0, .z = height / 2 };
-    camera.up = rl.Vector3{ .x = 0, .y = 2, .z = 0 };
-    camera.fovy = 45;
-    camera.projection = rl.CAMERA_PERSPECTIVE;
+    var camera: rl.Camera3D = .{
+        .position = rl.Vector3{ .x = 100, .y = 100, .z = 100 },
+        .target = rl.Vector3{ .x = width / 2, .y = 0, .z = height / 2 },
+        .fovy = 45,
+        .up = rl.Vector3{ .x = 0, .y = 2, .z = 0 },
+        .projection = rl.CameraProjection.perspective,
+    };
 
-    rl.SetTargetFPS(30);
+    rl.setTargetFPS(30);
 
     const heightMap = generateHeightmap();
     const terrainMesh = try createTerrainMesh(allocator, heightMap);
-    const terrainModel = rl.LoadModelFromMesh(terrainMesh);
+    const terrainModel = try rl.loadModelFromMesh(terrainMesh);
 
-    while (!rl.WindowShouldClose()) {
-        rl.BeginDrawing();
-        defer rl.EndDrawing();
-        rl.ClearBackground(rl.WHITE);
+    while (!rl.windowShouldClose()) {
+        rl.beginDrawing();
+        defer rl.endDrawing();
+        rl.clearBackground(rl.Color.white);
         // Rotates the camera and allows zooming with the scroll wheel.
-        rl.UpdateCamera(&camera, rl.CAMERA_ORBITAL);
+        rl.updateCamera(&camera, rl.CameraMode.orbital);
 
-        rl.BeginMode3D(camera);
+        rl.beginMode3D(camera);
 
-        rl.DrawModel(terrainModel, .{ .x = 0, .y = 0, .z = 0 }, 1.0, rl.GRAY);
+        rl.drawModel(terrainModel, .{ .x = 0, .y = 0, .z = 0 }, 1.0, rl.Color.gray);
         // To better see the heightmap
         drawTerrainGrid(heightMap);
 
-        rl.EndMode3D();
-        rl.DrawFPS(10, 10);
+        rl.endMode3D();
+        rl.drawFPS(10, 10);
     }
 
     // rl.UnloadModel(terrainModel);

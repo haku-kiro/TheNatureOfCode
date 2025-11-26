@@ -11,16 +11,16 @@ pub fn main() !void {
     const screenWidth = 800;
     const screenHeight = 450;
 
-    rl.InitWindow(screenWidth, screenHeight, "Basic Bouncing Ball, without vectors");
-    defer rl.CloseWindow();
+    rl.initWindow(screenWidth, screenHeight, "Basic Bouncing Ball, without vectors");
+    defer rl.closeWindow();
 
-    rl.SetTargetFPS(60);
+    rl.setTargetFPS(60);
 
-    while (!rl.WindowShouldClose()) {
-        rl.BeginDrawing();
-        defer rl.EndDrawing();
+    while (!rl.windowShouldClose()) {
+        rl.beginDrawing();
+        defer rl.endDrawing();
 
-        rl.ClearBackground(rl.BLACK);
+        rl.clearBackground(rl.Color.black);
 
         x += xspeed;
         y += yspeed;
@@ -31,6 +31,6 @@ pub fn main() !void {
         const x_pos: c_int = @intFromFloat(x);
         const y_pos: c_int = @intFromFloat(y);
 
-        rl.DrawCircle(x_pos, y_pos, ball_radius, rl.WHITE);
+        rl.drawCircle(x_pos, y_pos, ball_radius, rl.Color.white);
     }
 }

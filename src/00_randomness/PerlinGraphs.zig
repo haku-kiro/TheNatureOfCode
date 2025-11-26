@@ -9,10 +9,10 @@ const random = prng.random();
 pub fn main() !void {
     const screenWidth = 800;
     const screenHeight = 450;
-    rl.InitWindow(screenWidth, screenHeight, "Perlin noise graph");
-    defer rl.CloseWindow();
+    rl.initWindow(screenWidth, screenHeight, "Perlin noise graph");
+    defer rl.closeWindow();
 
-    rl.SetTargetFPS(60);
+    rl.setTargetFPS(60);
 
     var time: f32 = 0.0;
     const octaves = 1;
@@ -20,11 +20,11 @@ pub fn main() !void {
 
     const n = perlin.Perlin{};
 
-    while (!rl.WindowShouldClose()) {
-        rl.BeginDrawing();
-        defer rl.EndDrawing();
+    while (!rl.windowShouldClose()) {
+        rl.beginDrawing();
+        defer rl.endDrawing();
 
-        rl.ClearBackground(rl.WHITE);
+        rl.clearBackground(rl.Color.white);
 
         var xoff = time;
         for (0..screenWidth) |i| {
@@ -42,7 +42,7 @@ pub fn main() !void {
             xoff += frequency;
 
             // rl.DrawLine(x_pos, y_pos, x_pos + 1, y_next_pos, rl.RED);
-            rl.DrawCircle(x_pos, y_pos, 10, rl.RED);
+            rl.drawCircle(x_pos, y_pos, 5, rl.Color.red);
         }
         time += frequency;
     }
