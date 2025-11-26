@@ -28,20 +28,20 @@ pub fn main() !void {
 
         var xoff = time;
         for (0..screenWidth) |i| {
-            const x_pos: c_int = @intCast(i);
+            const x_pos: c_int = @intCast(i / 2);
             // Random noise line (uniform distribution)
             // Leaving commented out by default, if you want to plot uniform noise on a graph
             // uncomment the following:
             // const y_random = random.intRangeAtMost(c_int, 0, screenHeight);
             // const y_random_next = random.intRangeAtMost(c_int, 0, screenHeight);
-            // rl.DrawLine(x_pos, y_random, x_pos + 1, y_random_next, rl.BLACK);
+            // rl.drawLine(x_pos, y_random, x_pos + 1, y_random_next, rl.Color.black);
 
             // Perlin noise line
             const y_pos = generateNextYPerlin(n, xoff, screenHeight, octaves);
             // const y_next_pos = generateNextYPerlin(n, xoff + frequency, screenHeight, octaves);
             xoff += frequency;
 
-            // rl.DrawLine(x_pos, y_pos, x_pos + 1, y_next_pos, rl.RED);
+            // rl.drawLine(x_pos, y_pos, x_pos + 1, y_pos, rl.Color.red);
             rl.drawCircle(x_pos, y_pos, 5, rl.Color.red);
         }
         time += frequency;
